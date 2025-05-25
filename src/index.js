@@ -1,7 +1,10 @@
 const express = require("express")
 const app = express()
+const bodyParser = require("body-parser")
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
 const router = require('./routes/index')
-app.use('/api', router)
+app.use('/orderService/api', router)
 app.listen(3006, ()=>{
     console.log("Server listening on port 3006")
 })

@@ -1,18 +1,6 @@
 const express = require("express")
-const v1Router = require('./routes/')
 const router = express.Router()
+const v1Router = require("./v1/index")
 
-router.post('/placeOrder', (req, res) => {
-    //expect an array of varinatss id in req body
-    try {
-        const orders = req.body.orders;
-        //check if orders exists in db
-        for(let i = 0; i < orders.length; i++) {
-
-        }
-    } catch (error) {
-        
-    }
-   
-})
+router.use('/v1', v1Router)
 module.exports = router
