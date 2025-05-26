@@ -99,4 +99,20 @@ router.delete('/deleteOrder', async(req, res)=>{
         }) 
     }
 })
+
+router.post('/applyCoupon/:couponCode', (req, res) => {
+    if(req.params.couponCode == "DIWALI2025"){
+        res.status(200).json({value:25})
+    }else{
+        res.status(500).json({
+            msg: "Invalid Coupon code"
+        })
+    }
+})
+
+router.get('/promoMessage', (req, res) => {
+
+    res.status(200).json({message:"Apply Code: DIWALI2025 to get 25% Discount 🎉🎉"})
+
+})
 module.exports = router 
