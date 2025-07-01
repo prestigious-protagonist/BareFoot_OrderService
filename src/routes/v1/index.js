@@ -2,17 +2,46 @@ const express = require("express");
 const {order} = require("../../models/index");
 const { Op } = require("sequelize");
 const router = express.Router()
+const axios = require("axios")
 router.post('/placeOrder',(req, res, next) => {
     try {
         const data = req.body;
         if (!(data.items && data.price)) {
             throw new Error("Insufficient fields");
         }
+        console.log("ITEMS:: "+data.items)
         req.validatedData = data;
         next();
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
+},
+async (req, res, next) => {
+  try {
+    console.log(req.headers.authorization.substring(7))
+    const { variantId, quantity, size } = req.body.items[0];
+
+   const response = await axios.patch(
+  "http://localhost:3000/productService/api/user/decreaseSize",
+  {
+    variantsId: variantId,
+    orderCount: quantity,
+    size,
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${req.headers.authorization.substring(7)}`
+    }
+  }
+);
+
+
+  
+    next()
+  } catch (error) {
+    console.log("Error coming:", error.response.data);
+    res.status(400).json({ error:  error.response.data});
+  }
 }
 ,async (req, res)=>{
     let userId =  req.headers["x-user-id"]
@@ -23,6 +52,8 @@ router.post('/placeOrder',(req, res, next) => {
            }) 
         }
         const data = {...req.body, userId, deliveryStatus: false}
+        console.log("data is : " + JSON.stringify(data, null, 2))
+
         const response = await order.create(data)
         return res.status(201).json({
             msg: "Order placed successfully",
