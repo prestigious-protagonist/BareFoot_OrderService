@@ -8,11 +8,14 @@ const { BASE_URL } = require("../../config/server-config");
 router.post('/placeOrder',(req, res, next) => {
     try {
         const data = req.body;
+        console.log("Line 11 "+data)
         if (!(data.items && data.price)) {
             throw new Error("Insufficient fields");
         }
         console.log("ITEMS:: "+data.items)
         req.validatedData = data;
+        
+        console.log("LIne 18 "+req.validatedData)
         next();
     } catch (error) {
         res.status(400).json({ error: error.message });
